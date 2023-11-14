@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model user_details {
+  id                 String              @id @default(dbgenerated("generate_random_string(10)"))
+  first_name         String
+  last_name          String
+  email              String              @unique
+  username           String              @unique
+  password           String
+  phone              String              @unique
+  created_date       DateTime?           @default(dbgenerated("CURRENT_DATE")) @db.Date
+  stream_key         String              @unique
+  video_details      live_video_details?
+  user_media_details user_media_details?
+}
+
+model live_video_details {
+  id           String        @id @default(dbgenerated("generate_random_string(10)"))
+  title        String
+  created_date DateTime?     @default(dbgenerated("CURRENT_DATE")) @db.Date
+  user_id      String?       @unique
+  user_details user_details? @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user")
+}
+
+model video_details {
+  id           String    @id @default(dbgenerated("generate_random_string(10)"))
+  created_date DateTime? @default(dbgenerated("CURRENT_DATE")) @db.Date
+  url          String
+}
+
+model user_media_details {
+  id                String       @id @default(dbgenerated("generate_random_string(10)"))
+  profile_image_src String?      @unique
+  cover_image_src   String?      @unique
+  created_date      DateTime?    @default(dbgenerated("CURRENT_DATE")) @db.Date
+  user_id           String       @unique
+  user_details      user_details @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_details")
+}

@@ -1,0 +1,12 @@
+node_modules
+build
+media
+migrations
+
+*.log
+
+*.txt
+*.png
+*.json
+*.jpg
+*.env
